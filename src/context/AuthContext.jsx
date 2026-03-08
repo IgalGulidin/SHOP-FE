@@ -8,8 +8,11 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     setAuthToken(token);
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
   }, [token]);
 
   const logout = () => setToken(null);
