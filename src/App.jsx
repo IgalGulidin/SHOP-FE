@@ -19,7 +19,7 @@ export default function App() {
           path="/favorites"
           element={
             <RequireAuth>
-              <FavotietesPage />
+              <favotietesPage />
             </RequireAuth>
           }
         />

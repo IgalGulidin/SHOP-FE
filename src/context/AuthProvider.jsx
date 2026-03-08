@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { setAuthToken } from "../api/client";
 
-export default function AuthProvider({ children }) {
-    
+export default function AuthProvider({ children }) { 
     const [token, setToken] = useState(() => localStorage.getItem("token"));
 
     useEffect(() => {
@@ -19,8 +18,8 @@ export default function AuthProvider({ children }) {
     const logout = () => setToken(null);
 
     return (
-        <AuthContext.provider value={{ token, setToken, logout }}>
+        <AuthContext.Provider value={{ token, setToken, logout }}>
             {children}
-        </AuthContext.provider>
+        </AuthContext.Provider>
     );
 }
