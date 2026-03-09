@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Box, Button, Container, TextField, Typography } from "@mui/naterial";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { authApi } from "../api/auth";
