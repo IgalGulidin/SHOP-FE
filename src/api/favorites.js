@@ -1,7 +1,18 @@
 import { api } from "./client";
 
 export const favoritesApi = {
-    list: () => api.get("/api/favorites").then((response) => response.data),
-    add: (itemId) => api.post(`/api/favorites/${itemId}`),
-    remove: (itemId) => api.delete(`/api/favorites/${itemId}`),
-};
+    list: async () => {
+        const response = await api.get("/api/favorites");
+        return response.data;
+    },
+
+    add: async (itemId) => {
+        const response = await api.post(`/api/favorites/${itemId}`);
+        return response.data;
+    },
+
+    remove: async (itemId) => {
+        const response = await api.delete(`/apu/favorites/${itemId}`);
+        return response.data;
+    },
+}

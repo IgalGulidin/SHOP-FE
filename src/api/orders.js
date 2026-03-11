@@ -1,9 +1,25 @@
 import { api } from "./client";
 
 export const ordersApi = {
-    list: () => api.get("/api/orders").then((response) => response.data),
-    pending: () => api.get("/api/orders/pending").then((response) => response.data),
-    changeQty: (itemId, quantityChange) =>
-        api.post(`/api/orders/pending/items/${itemId}`, { quantityChange }).then((response) => response.data),
-    pay: () => api.post("/api/orders/pending/pay").then((response) => response.data)
+    list: async () => {
+        const response = await api.get("/api/orders");
+        return response.data;
+    },
+
+    pending: async () => {
+        const response = await api.get("/api/orders/pending");
+        return response.data;
+    },
+
+    changeQty: async (itemId, quantityChange) => {
+        const response = await api.post(`/api/orders/pending/items/${itemId}`, {
+            quantityChange,
+        });
+        return response.data;
+    },
+
+    pay: async () => {
+        const response = await api.post("/api/orders/pending/pay");
+        return response.data;
+    },
 };
