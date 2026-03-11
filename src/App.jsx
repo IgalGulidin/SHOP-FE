@@ -6,6 +6,7 @@ import FavoritesPage from "./pages/FavoritesPage";
 import OrdersPage from "./pages/OrdersPage";
 import PendingOrderPage from "./pages/PendingOrderPage";
 import RequireAuth from "./components/RequireAuth";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 
 export default function App() {
   return (
@@ -36,6 +37,14 @@ export default function App() {
           element={
             <RequireAuth>
               <PendingOrderPage />
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/orders/:orderId"
+          element={
+            <RequireAuth>
+              <OrderDetailsPage />
             </RequireAuth>
           }
         />
