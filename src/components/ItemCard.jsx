@@ -4,6 +4,7 @@ import {
   CardMedia,
   Typography,
   Button,
+  Box
 } from "@mui/material";
 
 export default function ItemCard({ item, onAddFavorite, onRemoveFavorite, onAddToCart }) {
