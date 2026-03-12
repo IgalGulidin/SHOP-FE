@@ -64,7 +64,7 @@ export default function HomePage() {
 
         <Grid container spacing={2}>
           {items.map((item) => (
-            <Grid item key={item.id}>
+            <Grid key={item.id}>
               <ItemCard
                 item={item}
                 onAddFavorites={handleAddFavorite}

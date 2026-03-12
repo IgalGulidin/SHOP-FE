@@ -62,7 +62,7 @@ export default function FavoritesPage() {
         ) : (
           <Grid container spacing={2}>
             {favoriteItems.map((item) => (
-              <Grid item key={item.id}>
+              <Grid key={item.id}>
                 <ItemCard
                   item={item}
                   onRemoveFavorite={handleRemoveFavorite}
