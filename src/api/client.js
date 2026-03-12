@@ -11,3 +11,15 @@ export function setAuthToken(token) {
         delete api.defaults.headers.common["Authorization"];
     }
 }
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            delete api.defaults.headers.common["Authorization"];
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+);
