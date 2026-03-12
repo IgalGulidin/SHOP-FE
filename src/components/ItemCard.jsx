@@ -29,7 +29,7 @@ export default function ItemCard({ item, onAddFavorite, onRemoveFavorite, onAddT
 
         <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
             {onAddFavorite && (
-              <Button varaint="contained" onClick={() => onAddFavorite(item.id)}>
+              <Button variant="contained" onClick={() => onAddFavorite(item.id)}>
                 Add to Favorites
               </Button>
             )}

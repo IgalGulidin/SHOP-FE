@@ -67,7 +67,7 @@ export default function HomePage() {
             <Grid key={item.id}>
               <ItemCard
                 item={item}
-                onAddFavorites={handleAddFavorite}
+                onAddFavorite={handleAddFavorite}
                 onAddToCart={handleAddToCart}
               />
             </Grid>
