@@ -50,8 +50,8 @@ export default function HomePage() {
       <Navbar />
 
       <Box sx={{ p: 3 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>
-          Welcome to my shop
+        <Typography variant="h3" sx={{ mb: 2 }}>
+          Igal's shop
         </Typography>
 
         <TextField
