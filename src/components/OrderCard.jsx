@@ -13,13 +13,14 @@ export default function OrderCard({ order, onOpen }) {
     >
       <CardContent>
         <Typography variant="h6">Order #{order.id}</Typography>
-
         <Typography>Status: {order.status}</Typography>
         <Typography>Total Price: ${order.totalPrice}</Typography>
         <Typography>
           Shipping Address: {order.shipCountry}, {order.shipCity}
         </Typography>
-        <Typography>Created At: {order.createdAt}</Typography>
+        <Typography>
+          Created At: {new Date(order.createdAt).toLocaleString()}
+          </Typography>
 
         <Box sx={{ mt: 2 }}>
           <Button variant="contained" onClick={() => onOpen(order)}>
