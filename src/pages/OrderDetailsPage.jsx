@@ -8,10 +8,12 @@ export default function OrderDetailsPage() {
   const { orderId } = useParams();
   const [orderDetails, setOrderDetails] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
+        setIsLoading(true);
         const orderData = await ordersApi.getById(orderId);
         setOrderDetails(orderData);
         setErrorMessage("");
@@ -20,6 +22,8 @@ export default function OrderDetailsPage() {
         setErrorMessage(
           error?.response?.data?.error || "Failed to load order details",
         );
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -34,13 +38,20 @@ export default function OrderDetailsPage() {
         <Typography variant="h4" sx={{ mb: 3 }}>
           Order Details
         </Typography>
-        {errorMessage && (
+
+        {isLoading && <Typography>Loading order details...</Typography>}
+
+        {!isLoading && errorMessage && (
+            <Typography color="error">{errorMessage}</Typography>
+        )}
+
+        {!isLoading && errorMessage && (
           <Typography color="error" sx={{ mb: 2 }}>
             {errorMessage}
           </Typography>
         )}
-        {!orderDetails} ? (<Typography>Loading order details...</Typography>) :
-        (
+
+        {!isLoading && !errorMessage && orderDetails && (
         <>
           <Typography sx={{ mb: 1 }}>Order ID: #{orderDetails.id}</Typography>
 
@@ -50,12 +61,12 @@ export default function OrderDetailsPage() {
             Shipping Address: {orderDetails.shipCountry},{" "}
             {orderDetails.shipCity}
           </Typography>
-
+          <Typography>Created At: {new Date(orderDetails.createdAt).toLocaleString()}</Typography>
           <Typography sx={{ mb: 3 }}>
             Total Price: ${orderDetails.totalPrice}
           </Typography>
 
-          {orderDetails.items.map((item) => (
+          {(orderDetails.items ?? []).map((item) => (
             <Card key={item.itemId} sx={{ mb: 2 }}>
               <CardContent
                 sx={{
@@ -82,7 +93,7 @@ export default function OrderDetailsPage() {
             </Card>
           ))}
         </>
-        )
+        )}
       </Box>
     </>
   );
