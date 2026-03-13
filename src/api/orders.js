@@ -11,6 +11,11 @@ export const ordersApi = {
         return response.data;
     },
 
+    getById: async (orderId) => {
+        const response = await api.get(`/api/orders/${orderId}`);
+        return response.data;
+    },
+
     changeQty: async (itemId, quantityChange) => {
         const response = await api.post(`/api/orders/pending/items/${itemId}`, {
             quantityChange,
