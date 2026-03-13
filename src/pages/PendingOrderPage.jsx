@@ -29,10 +29,10 @@ export default function PendingOrderPage() {
     fetchPendingOrder();
   }, []);
 
-  const handleIcreaseQuantity = async (itemId) => {
+  const handleIncreaseQuantity = async (itemId) => {
     try {
-      const updateOrder = await ordersApi.changeQty(itemId, 1);
-      setPendingOrder(updateOrder);
+      const updatedOrder = await ordersApi.changeQty(itemId, 1);
+      setPendingOrder(updatedOrder);
     } catch (error) {
       alert(error?.response?.data?.error || "Failed to increase quantity");
     }
@@ -51,7 +51,7 @@ export default function PendingOrderPage() {
     try {
       const paidOrder = await ordersApi.pay();
       setPendingOrder(null);
-      alert(`Payment successful. Order #${paidOrder.id} is now CLOSED`);
+      alert(`Payment successful. Order #${paidOrder.id} is now CLOSED.`);
     } catch (error) {
       alert(error?.response?.data?.error || "Payment failed");
     }
@@ -92,28 +92,24 @@ export default function PendingOrderPage() {
                     display: "flex",
                     alignItems: "center",
                     gap: 2,
+                    justifyContent: "space-between",
                     flexWrap: "wrap",
                   }}
                 >
-                  <CardMedia
-                    component="img"
-                    image={item.imageUrl}
-                    alt={item.title}
-                    sx={{ width: 120, height: 120, objectFit: "cover " }}
-                  />
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <CardMedia
+                      component="img"
+                      image={item.imageUrl}
+                      alt={item.title}
+                      sx={{ width: 120, height: 120, objectFit: "cover" }}
+                    />
 
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6">{item.title}</Typography>
-                    <Typography>Unit Price: ${item.unitPrice}</Typography>
-                    <Typography>Quantity: {item.quantity}</Typography>
-                    <Typography>Line Total: ${item.lineTotal}</Typography>
-                  </Box>
-
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6">{item.title}</Typography>
-                    <Typography>Unit Price: ${item.unitPrice}</Typography>
-                    <Typography>Quantity: {item.quantity}</Typography>
-                    <Typography>Line Total: ${item.lineTotal}</Typography>
+                    <Box>
+                      <Typography variant="h6">{item.title}</Typography>
+                      <Typography>Unit Price: ${item.unitPrice}</Typography>
+                      <Typography>Quantity: {item.quantity}</Typography>
+                      <Typography>Line Total: ${item.lineTotal}</Typography>
+                    </Box>
                   </Box>
 
                   <Box sx={{ display: "flex", gap: 1 }}>
@@ -126,7 +122,7 @@ export default function PendingOrderPage() {
 
                     <Button
                       variant="contained"
-                      onClick={() => handleIcreaseQuantity(item.itemId)}
+                      onClick={() => handleIncreaseQuantity(item.itemId)}
                     >
                       +1
                     </Button>
