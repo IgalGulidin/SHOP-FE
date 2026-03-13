@@ -55,9 +55,9 @@ export default function HomePage() {
         </Typography>
 
         <TextField
-          label="Search"
+          label="Search items"
           value={search}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(error) => handleSearch(error.target.value)}
           fullWidth
           sx={{ mb: 3 }}
         />
