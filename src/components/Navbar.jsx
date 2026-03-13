@@ -10,7 +10,7 @@ export default function Navbar() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          My Shop
+          Igal's shop
         </Typography>
 
         <Box>
