@@ -62,17 +62,21 @@ export default function HomePage() {
           sx={{ mb: 3 }}
         />
 
-        <Grid container spacing={2}>
-          {items.map((item) => (
-            <Grid key={item.id}>
-              <ItemCard
-                item={item}
-                onAddFavorite={handleAddFavorite}
-                onAddToCart={handleAddToCart}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {items.length === 0 ? (
+          <Typography>No items found.</Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {items.map((item) => (
+              <Grid key={item.id}>
+                <ItemCard
+                  item={item}
+                  onAddFavorite={handleAddFavorite}
+                  onAddToCart={handleAddToCart}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </>
   );
