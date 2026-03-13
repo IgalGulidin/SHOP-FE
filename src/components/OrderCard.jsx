@@ -7,8 +7,8 @@ export default function OrderCard({ order, onOpen }) {
     <Card
       sx={{
         mb: 2,
-        border: isTemp ? "2px solid orange" : "1px solid #ccc",
-        backgroundColor: isTemp ? "#fff8e1" : "white",
+        border: isTemp ? "2px solid #ff9800" : "1px solid #444",
+        backgroundColor: isTemp ? "#2c2c20" : "#1f1f1f",
       }}
     >
       <CardContent>
