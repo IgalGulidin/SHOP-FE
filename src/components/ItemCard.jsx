@@ -4,10 +4,16 @@ import {
   CardMedia,
   Typography,
   Button,
-  Box
+  Box,
 } from "@mui/material";
 
-export default function ItemCard({ item, onAddFavorite, onRemoveFavorite, onAddToCart }) {
+export default function ItemCard({
+  item,
+  onAddFavorite,
+  onRemoveFavorite,
+  onAddToCart,
+  isActionLoading = false,
+}) {
   return (
     <Card sx={{ width: 300 }}>
       <CardMedia
@@ -20,7 +26,7 @@ export default function ItemCard({ item, onAddFavorite, onRemoveFavorite, onAddT
       <CardContent>
         <Typography variant="h6">{item.title}</Typography>
         <Typography>${item.priceUsd}</Typography>
-        
+
         <Typography color={item.stockQty === 0 ? "error" : "text.secondary"}>
           {item.stockQty === 0
             ? "0 items left in stock"
@@ -28,31 +34,36 @@ export default function ItemCard({ item, onAddFavorite, onRemoveFavorite, onAddT
         </Typography>
 
         <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {onAddFavorite && (
-              <Button variant="contained" onClick={() => onAddFavorite(item.id)}>
-                Add to Favorites
-              </Button>
-            )}
+          {onAddFavorite && (
+            <Button
+              variant="contained"
+              disabled={isActionLoading}
+              onClick={() => onAddFavorite(item.id)}
+            >
+              Add to Favorites
+            </Button>
+          )}
 
-            {onRemoveFavorite && (
-              <Button 
-                variant="outlined"
-                color="error"
-                onClick={() => onRemoveFavorite(item.id)}
-              >
-                Remove Favorite
-              </Button>
-            )}
-            
-            {onAddToCart && (
-              <Button
-                variant="outlined"
-                disabled={item.stockQty === 0}
-                onClick={() => onAddToCart(item.id)}
-              >
-                Add to Cart
-              </Button>
-            )}
+          {onRemoveFavorite && (
+            <Button
+              variant="outlined"
+              color="error"
+              disabled={isActionLoading}
+              onClick={() => onRemoveFavorite(item.id)}
+            >
+              Remove Favorite
+            </Button>
+          )}
+
+          {onAddToCart && (
+            <Button
+              variant="outlined"
+              disabled={item.stockQty === 0}
+              onClick={() => onAddToCart(item.id)}
+            >
+              Add to Cart
+            </Button>
+          )}
         </Box>
       </CardContent>
     </Card>

@@ -7,6 +7,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { ordersApi } from "../api/orders";
@@ -16,6 +17,9 @@ export default function PendingOrderPage() {
   const navigate = useNavigate();
   const [pendingOrder, setPendingOrder] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isUpdatingOrder, setIsUpdatingOrder] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -40,12 +44,15 @@ export default function PendingOrderPage() {
   useEffect(() => {
     const fetchPendingOrder = async () => {
       try {
+        setIsPageLoading(true);
         const orderData = await ordersApi.pending();
         setPendingOrder(orderData);
         setErrorMessage("");
       } catch (error) {
         console.error("Failed to load pending order", error);
         setErrorMessage("Failed to load pending order");
+      } finally {
+        setIsPageLoading(false);
       }
     };
 
@@ -54,18 +61,23 @@ export default function PendingOrderPage() {
 
   const handleIncreaseQuantity = async (itemId) => {
     try {
+      setIsUpdatingOrder(true);
       const updatedOrder = await ordersApi.changeQty(itemId, 1);
       setPendingOrder(updatedOrder);
+      showSnackbar("Quantity increased", "success");
     } catch (error) {
       showSnackbar(
         error?.response?.data?.error || "Failed to increase quantity",
         "error",
       );
+    } finally {
+      setIsUpdatingOrder(false);
     }
   };
 
   const handleDecreaseQuantity = async (itemId) => {
     try {
+      setIsUpdatingOrder(true);
       const updatedOrder = await ordersApi.changeQty(itemId, -1);
       setPendingOrder(updatedOrder);
 
@@ -77,13 +89,16 @@ export default function PendingOrderPage() {
         error?.response?.data?.error || "Failed to decrease quantity",
         "error",
       );
+    } finally {
+      setIsUpdatingOrder(false);
     }
   };
 
   const handlePay = async () => {
     try {
+      setIsPaying(true);
       const paidOrder = await ordersApi.pay();
-      
+
       showSnackbar(
         `Payment successful. Order #${paidOrder.id} is now CLOSED.`,
         "success",
@@ -94,6 +109,8 @@ export default function PendingOrderPage() {
       }, 1200);
     } catch (error) {
       showSnackbar(error?.response?.data?.error || "Payment failed", "error");
+    } finally {
+      setIsPaying(false);
     }
   };
 
@@ -112,13 +129,16 @@ export default function PendingOrderPage() {
           </Typography>
         )}
 
-        {!pendingOrder ? (
+        {isPageLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : !pendingOrder ? (
           <Typography>No pending order right now.</Typography>
         ) : (
           <>
             <Typography sx={{ mb: 1 }}>
-              Shipping Address: {pendingOrder.shipCountry},{" "}
-              {pendingOrder.shipCity}
+              Shipping Address: {pendingOrder.shipCountry},
               {pendingOrder.shipCity}
             </Typography>
 
@@ -156,6 +176,7 @@ export default function PendingOrderPage() {
                   <Box sx={{ display: "flex", gap: 1 }}>
                     <Button
                       variant="outlined"
+                      disabled={isUpdatingOrder || isPaying}
                       onClick={() => handleDecreaseQuantity(item.itemId)}
                     >
                       -1
@@ -163,6 +184,7 @@ export default function PendingOrderPage() {
 
                     <Button
                       variant="contained"
+                      disabled={isUpdatingOrder || isPaying}
                       onClick={() => handleIncreaseQuantity(item.itemId)}
                     >
                       +1
@@ -172,8 +194,13 @@ export default function PendingOrderPage() {
               </Card>
             ))}
 
-            <Button variant="contained" color="success" onClick={handlePay}>
-              Pay Now
+            <Button
+              variant="contained"
+              color="success"
+              disabled={isUpdatingOrder || isPaying}
+              onClick={handlePay}
+            >
+              {isPaying ? "Processing Payment..." : "Pay Now"}
             </Button>
           </>
         )}
