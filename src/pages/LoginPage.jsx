@@ -29,6 +29,9 @@ export default function LoginPage() {
     setErrorMessage("");
 
     try {
+      localStorage.removeItem("token");
+      setToken(null);
+
       const loginResponse = await authApi.login(form.email, form.password);
       setToken(loginResponse.token);
       navigate("/");
