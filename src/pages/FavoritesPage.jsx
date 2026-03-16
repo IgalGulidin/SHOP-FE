@@ -4,9 +4,30 @@ import Navbar from "../components/Navbar";
 import ItemCard from "../components/ItemCard";
 import { favoritesApi } from "../api/favorites";
 import { ordersApi } from "../api/orders";
+import AppSnackbar from "../components/AppSnackbar";
 
 export default function FavoritesPage() {
   const [favoriteItems, setFavoriteItems] = useState([]);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
+
+  const showSnackbar = (message, severity = "info") => {
+    setSnackbar({
+      open: true,
+      message,
+      severity,
+    });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((previous) => ({
+      ...previous,
+      open: false,
+    }));
+  };
 
   const loadFavorites = async () => {
     try {
@@ -34,17 +55,18 @@ export default function FavoritesPage() {
     try {
       await favoritesApi.remove(itemId);
       await loadFavorites();
+      showSnackbar("Removed from favorites", "success");
     } catch (error) {
-      console.error("Failed to remove favorite", error);
+      showSnackbar(error?.response?.data?.error || "Failed to remove favorite", "error");
     }
   };
 
   const handleAddToCart = async (itemId) => {
     try {
       await ordersApi.changeQty(itemId, 1);
-      alert("Added to cart");
+      showSnackbar("Added to cart", "success");
     } catch (error) {
-      alert(error?.response?.data?.error || "Failed to add to cart");
+      showSnackbar(error?.response?.data?.error || "Failed to add to cart", "error");
     }
   };
 
@@ -73,6 +95,13 @@ export default function FavoritesPage() {
           </Grid>
         )}
       </Box>
+
+      <AppSnackbar 
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleCloseSnackbar}
+      />
     </>
   );
 }

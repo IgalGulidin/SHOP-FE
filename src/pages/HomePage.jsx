@@ -6,43 +6,83 @@ import { itemsApi } from "../api/items";
 import { favoritesApi } from "../api/favorites";
 import { ordersApi } from "../api/orders";
 import { AuthContext } from "../context/AuthContext";
+import AppSnackbar from "../components/AppSnackbar";
 
 export default function HomePage() {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const { token } = useContext(AuthContext);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
   useEffect(() => {
-    itemsApi.getAll().then(setItems);
+    const fetchItems = async () => {
+      const itemsData = await itemsApi.getAll();
+      setItems(itemsData);
+    };
+
+    fetchItems();
   }, []);
 
   const handleSearch = async (value) => {
     setSearch(value);
-    if (!value) {
-      const data = await itemsApi.getAll();
-      setItems(data);
-    } else {
-      const data = await itemsApi.search(value);
-      setItems(data);
+
+    if (!value.trim()) {
+      const itemsData = await itemsApi.getAll();
+      setItems(itemsData);
+      return;
     }
+
+    const searchResults = await itemsApi.search(value);
+    setItems(searchResults);
+  };
+
+  const showSnackbar = (message, severity = "info") => {
+    setSnackbar({
+      open: true,
+      message,
+      severity,
+    });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((previous) => ({
+      ...previous,
+      open: false,
+    }));
   };
 
   const handleAddFavorite = async (itemId) => {
     if (!token) {
-      alert("Login first");
+      showSnackbar("Login first", "warning");
       return;
     }
-    await favoritesApi.add(itemId);
-    alert("Added to favorites");
+
+    try{
+      await favoritesApi.add(itemId);
+      showSnackbar("Added to favorites", "success");
+    } catch (error) {
+      showSnackbar(error?.response?.data?.error || "Failed to add favorite", "error");
+    }
   };
 
   const handleAddToCart = async (itemId) => {
     if (!token) {
-      alert("Login first");
+      showSnackbar("Login first", "warning");
       return;
     }
-    await ordersApi.changeQty(itemId, 1);
-    alert("Added to cart");
+
+    try {
+      await ordersApi.changeQty(itemId, 1);
+      const itemsData = await itemsApi.getAll();
+      setItems(itemsData);
+      showSnackbar("Added to cart", "success");
+    } catch (error) {
+      showSnackbar(error?.response?.data?.error || "Failed to add to cart", "error")
+    }
   };
 
   return (
@@ -78,6 +118,13 @@ export default function HomePage() {
           </Grid>
         )}
       </Box>
+
+      <AppSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleCloseSnackbar}
+      />
     </>
   );
 }
